@@ -84,11 +84,15 @@ Conectar el otro dispositivo al dispositivo configurado inicialmente que se encu
 Utilizar el archivo consultas.sql, pero se deben modificar algunos datos antes de usarlo para conectarse a la base de datos.
 ```bash
 OPTIONS (
-    host '192.168.1.82',  //Poner la ip del host de la bdd
+    host '192.168.1.82',  #Poner la ip del host de la bdd
     dbname 'postgres',  #Poner el nombre de tu bdd
-    port '5432' <!-- Poner el puerto que tienes corriendo la bdd -->
+    port '5432' #Poner el puerto que tienes corriendo la bdd
   );
 ```
 ```bash
-
+OPTIONS (
+    user 'ext_user', #Colocas tu usuario que hayas creado anteriormente con la consulta SQL
+    password 'postgres' #Colocas la contraseña que hayas creado anteriormente para el usuario creado en la consulta SQL
+  );
 ```
+Ya te puedes conectar, ahora puedes utilizar las vistas y selecciones del archivo.
