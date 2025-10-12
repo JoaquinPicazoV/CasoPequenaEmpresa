@@ -16,7 +16,7 @@ INSERT INTO fabrica (fab_nombre, fab_telefono, fab_region, fab_pais) VALUES
 ('Depósito Temuco', '+56 45 3456789', 'Sur', 'Chile'),
 ('Proveedor Alternativo Valdivia', '+56 63 9876543', 'Sur', 'Chile');
 
-INSERT INTO articulo_fabrica (artfab_idarticulo, artfab_idfabrica, artfab_existencias, tipo_relacion) VALUES
+INSERT INTO articulo_fabrica (artfab_idarticulo, artfab_idfabrica, artfab_existencias, artfab_tipo_relacion) VALUES
 (1, 1, 50, 'actual'), 
 (2, 1, 40, 'actual'),
 (3, 2, 60, 'actual'),
@@ -28,7 +28,7 @@ INSERT INTO articulo_fabrica (artfab_idarticulo, artfab_idfabrica, artfab_existe
 (9, 1, 20, 'actual'),
 (10, 2, 18, 'actual');
 
-INSERT INTO articulo_fabrica (artfab_idarticulo, artfab_idfabrica, artfab_existencias, tipo_relacion) VALUES
+INSERT INTO articulo_fabrica (artfab_idarticulo, artfab_idfabrica, artfab_existencias, artfab_tipo_relacion) VALUES
 (1, 4, NULL, 'alternativa'), 
 (3, 4, NULL, 'alternativa'), 
 (8, 4, NULL, 'alternativa');

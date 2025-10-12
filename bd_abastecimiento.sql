@@ -20,6 +20,6 @@ CREATE TABLE articulo_fabrica (
   artfab_idarticulo INT NOT NULL REFERENCES articulo(art_id),
   artfab_idfabrica  INT NOT NULL REFERENCES fabrica(fab_id),
   artfab_existencias INT NOT NULL DEFAULT 0 CHECK (artfab_existencias >= 0),
-  artfab_tipo_relacion VARCHAR(15) DEFAULT 'actual' CHECK (artfab_tipo_relacion IN ('actual', 'potencial')),
+  artfab_tipo_relacion VARCHAR(15) DEFAULT 'actual' CHECK (artfab_tipo_relacion IN ('actual', 'alternativa')),
   PRIMARY KEY (artfab_idarticulo, artfab_idfabrica)
 );

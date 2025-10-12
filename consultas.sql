@@ -120,16 +120,16 @@ ORDER BY total_vendido DESC NULLS LAST;
 
 -- 7.9 Todos los articulos con sus fabricas actuales
 SELECT a.art_nombre, f.fab_nombre, af.artfab_existencias
-FROM articulo_fabrica af
-JOIN articulo a ON a.art_id = af.artfab_idarticulo
-JOIN fabrica f ON f.fab_id = af.artfab_idfabrica
-WHERE af.tipo_relacion = 'actual'
+FROM fdw_abastecimiento.articulo_fabrica af
+JOIN fdw_abastecimiento.articulo a ON a.art_id = af.artfab_idarticulo
+JOIN fdw_abastecimiento.fabrica f ON f.fab_id = af.artfab_idfabrica
+WHERE af.artfab_tipo_relacion = 'actual'
 ORDER BY f.fab_nombre;
 
 -- 7.10 Fabricas alternativas registradas
 SELECT a.art_nombre, f.fab_nombre AS fabrica_alternativa
-FROM articulo_fabrica af
-JOIN articulo a ON a.art_id = af.artfab_idarticulo
-JOIN fabrica f ON f.fab_id = af.artfab_idfabrica
-WHERE af.tipo_relacion = 'alternativa';
+FROM fdw_abastecimiento.articulo_fabrica af
+JOIN fdw_abastecimiento.articulo a ON a.art_id = af.artfab_idarticulo
+JOIN fdw_abastecimiento.fabrica f ON f.fab_id = af.artfab_idfabrica
+WHERE af.artfab_tipo_relacion = 'alternativa';
 
