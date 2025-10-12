@@ -13,16 +13,22 @@ INSERT INTO articulo (art_nombre, art_descripcion, art_precio) VALUES
 INSERT INTO fabrica (fab_nombre, fab_telefono, fab_region, fab_pais) VALUES
 ('Centro Logístico Santiago', '+56 2 1234567', 'Centro', 'Chile'),
 ('Bodega Antofagasta', '+56 55 2345678', 'Norte', 'Chile'),
-('Depósito Temuco', '+56 45 3456789', 'Sur', 'Chile');
+('Depósito Temuco', '+56 45 3456789', 'Sur', 'Chile'),
+('Proveedor Alternativo Valdivia', '+56 63 9876543', 'Sur', 'Chile');
 
-INSERT INTO articulo_fabrica VALUES
-(1, 1, 50),   -- Laptop HP en Santiago
-(2, 1, 40),   -- Monitor en Santiago
-(3, 2, 60),   -- Mouse en Antofagasta
-(4, 2, 30),   -- Teclado en Antofagasta
-(5, 1, 100),  -- SSD en Santiago
-(6, 3, 25),   -- Router en Temuco
-(7, 1, 10),   -- Impresora en Santiago
-(8, 3, 15),   -- Auriculares en Temuco
-(9, 1, 20),   -- Smartphone en Santiago
-(10, 2, 18);  -- iPad en Antofagasta
+INSERT INTO articulo_fabrica (artfab_idarticulo, artfab_idfabrica, artfab_existencias, tipo_relacion) VALUES
+(1, 1, 50, 'actual'), 
+(2, 1, 40, 'actual'),
+(3, 2, 60, 'actual'),
+(4, 2, 30, 'actual'), 
+(5, 1, 100, 'actual'),
+(6, 3, 25, 'actual'), 
+(7, 1, 10, 'actual'),  
+(8, 3, 15, 'actual'), 
+(9, 1, 20, 'actual'),
+(10, 2, 18, 'actual');
+
+INSERT INTO articulo_fabrica (artfab_idarticulo, artfab_idfabrica, artfab_existencias, tipo_relacion) VALUES
+(1, 4, NULL, 'alternativa'), 
+(3, 4, NULL, 'alternativa'), 
+(8, 4, NULL, 'alternativa');
