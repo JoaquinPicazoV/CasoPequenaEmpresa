@@ -100,7 +100,47 @@ OPTIONS (
 
 
 # WINDOWS
-Descargar POSTGRESQL 17, es importante que sea 17 porque un software que se usará posteriormente no tiene funcionamiento para POSTGRESQL 18.
+Descargar e instalar POSTGRESQL 17, es importante que sea 17 porque un software que se usará posteriormente no tiene funcionamiento para POSTGRESQL 18.
 ```bash
 https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
 ```
+Descargar e instalar MariaDB Connector/ODBC 64-bit x86.
+```bash
+https://mariadb.com/downloads/#connectors
+```
+```bash
+Product: ODBC Connector
+Version: Reomendad o actual
+OS: MS Windows (64-bit x86)
+```
+Abrir ODBC Data Source / Administrador de origen de datos ODBC. IMPORTANTE: Debe ser el 64-bit x86, no el 32-bit. Si no lo encuentras con el buscador de Windows, es posible que se encuentre en:
+```bash
+C:\Windows\System32\odbcad32.exe
+```
+
+Configurar conexión con ODBC Data Source / Administrador de origen de datos ODBC. 
+```bash
+DSN de sistema > agregar > Elegir la opción de "MariaDB ODBC 3.2 Driver"
+```
+
+Completar campos para conectarse a la base de datos MariaDB, los campos y datos serán:
+```bash
+Name: MariaDB_RPi
+Description: Conexión a MariaDB en Raspberry Pi
+Server Name: <ip_raspberry_pi>
+Port: <puerto_bdd_raspberry_pi>
+User name: usuario_bdd_habilitado_para_conexión
+Password: contraseña_usuario
+Database: ventas (o el que corresponda según nombre DB en Raspberry Pi)
+
+NOTA: El resto dejarlo por defecto y > next > next > next > next > finish
+```
+
+Entrar al gestor de base de datos pgAdmin4 para crear la base de datos
+```bash
+
+```
+
+
+
+
