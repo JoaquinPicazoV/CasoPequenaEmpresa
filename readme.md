@@ -96,3 +96,11 @@ OPTIONS (
   );
 ```
 ✅ Ya te puedes conectar, ahora puedes utilizar las vistas y selecciones del archivo.
+
+
+
+# WINDOWS
+Descargar POSTGRESQL 17, es importante que sea 17 porque un software que se usará posteriormente no tiene funcionamiento para POSTGRESQL 18.
+```bash
+https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+```
