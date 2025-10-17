@@ -58,8 +58,8 @@ Nota: Ustedes usan el nombre del archivo que tengan, para nuestro caso fue este.
 ### ▶️  PASO 7: Crear un usuario para conectarse al puerto y base de datos para administrarla
 ```bash
 sudo mysql
-CREATE USER 'fdw_user'@'%' IDENTIFIED BY 'tu_contraseña_segura';
-GRANT ALL PRIVILEGES ON ventas.* TO 'fdw_user'@'%';
+CREATE USER 'admin'@'%' IDENTIFIED BY 'admin';
+GRANT ALL PRIVILEGES ON ventas.* TO 'admin'@'%';
 FLUSH PRIVILEGES;
 ```
 
