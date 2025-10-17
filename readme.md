@@ -15,9 +15,6 @@ Este proyecto consiste modelo de datos para una pequeña empresa que gestiona pr
 sudo apt update
 sudo apt upgrade -y
 ```
-```bash
-sudo apt upgrade -y
-```
 
 ###  ▶️ PASO 2: Instalar lo necesario para usar MariaDB
 ```bash
@@ -132,8 +129,8 @@ INSERT INTO pedido (ped_idcliente, ped_direccion) VALUES
 
 INSERT INTO detalle_pedido (detped_idpedido, detped_idarticulo, detped_cantidad, detped_precio)
 VALUES
-(1, 101, 10, 3500), -- Pedido 1, Artículo 101
-(2, 102, 5, 2000);  -- Pedido 2, Artículo 102
+(1, 101, 10, 3500), 
+(2, 102, 5, 2000);  
 ```
 ✅ Ahora la base de datos funciona de forma local y permite recibir conexiones al puerto especificado, pudiendo conectar la otra parte de la base de datos fragmentada en otro dispositivo host para unificarlas.
 
