@@ -6,105 +6,144 @@ Este proyecto consiste modelo de datos para una pequeña empresa que gestiona pr
 
 ## ⚙️ Guía de ejecución
 ### 📋 REQUISITOS PREVIOS
-- Tener instalado PostgreSQL y el/los software de gestión de base de datos a su elección (en nuestro caso pgAdmin y Antares).
-- Tener al menos dos dispositivos para hostear las bases de datos.
+- De preferencia tener un Windos con instalado PostgreSQL y pgAdmin4 instalado, y en una Raspberri Pi distro linux tener instalado MariaDB y Antares. De todas formas se explica el paso a paso la descarga e instalación de estos. Pero es netamente para acelerear el proceso.
+- Tener dos dispositivos para hostear las bases de datos.
 
-### ▶️ PASO 1
-Para el paso actual y posteriores se trabajará con solo un dispotivo hasta que se diga lo contrario. Verificar que Postgresql esté instalado y corriendo con el comando:
+# RASPBERRY PI
+▶️ ### PASO 1: Actualizar e instalar la raspberri
 ```bash
-sudo systemctl status postgresql
-```
-En caso de que no esté activo, utilizar:
-```bash
-sudo systemctl start postgresql
+sudo apt update
+sudo apt upgrade -y
 ```
 ```bash
-sudo systemctl enable postgresql
-```
-### ▶️ PASO 2
-Editar el archivo postgresql.conf en la ruta en la que esté guardada:
-```bash
-sudo nano /etc/postgresql/15/main/postgresql.conf
-```
-El "15"  dentro del archivo se cambia por la version actual que tengas de postgresql. También, la linea que tiene la variable listen_addresses debe estar así:
-```bash
-listen_addresses = '*'
-```
-Esto permitirá que el servidor escuche conexiones desde cualquier IP dentro de la red.
-
-### ▶️ PASO 3
-Editar el archivo pg_hba.conf en la ruta en la que esté guardada:
-```bash
-sudo nano /etc/postgresql/15/main/pg_hba.conf
-```
-Agrega esta linea al final para permitir conexiones desde toda la red local (recuerda reemplazar con tu ip y máscara de red propia):
-```bash
- host postgres       postgres
-192.168.1.0/24    scram-sha-256
+sudo apt upgrade -y
 ```
 
-### ▶️ PASO 4
-Crear usuario remoto (si no existe), primero entra a PostgreSQL con:
+▶️ ### PASO 2: Instalar lo necesario para usar MariaDB
 ```bash
-sudo -u postgres psql
-```
-Y usa:
-```bash
-CREATE ROLE ext_user WITH LOGIN PASSWORD 'postgres';
-GRANT CONNECT ON DATABASE bd_abastecimiento TO ext_user;
-GRANT USAGE ON SCHEMA public TO ext_user;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO ext_user;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO ext_user;
+sudo apt install mariadb-server
+sudo apt install mariadb-client
 ```
 
-### ▶️ PASO 5
-Reiniciar para aplicar cambios con el comando:
+▶️ ### PASO 3: Permitir conexiones al puerto donde correrá el servidor con MariaDB y la DB trabajando con el firewall
 ```bash
-sudo systemctl restart postgresql
+sudo ufw allow 3306/tcp
+sudo ufw enable
+sudo ufw status
 ```
-Y verificar que está escuchando conexiones en la red con:
-```bash
-ss -nltp | grep 5432
-```
-Debería aparecer algo como:
-```bash
-LISTEN 0 244 0.0.0.0:5432
-```
-### ▶️ PASO 6
-Ahora se trabajará con ambos dispositivos, hay que crear las tablas con los archivos bd_abastecimiento.sql y bd_ventas.sql desde los respectivos software de gesitón de base de datos.
+Opción 2: realizarlo con iptables (pero recomendamos usar ufw)
 
-### ▶️ PASO 7
-Insertar datos en las tablas con los archivos seed_abastecimiento.sql y seed_ventas.sql disponibles en este repositorio.
-
-### ▶️ PASO 8
-Conectar el otro dispositivo al dispositivo configurado inicialmente que se encuentra esuchando conexiones.
-
-## 📡 PASOS PARA UTILIZACIÓN DE LAS BASES DE DATOS
-### ▶️ PASO 1
-Utilizar el archivo consultas.sql, pero se deben modificar algunos datos antes de usarlo para conectarse a la base de datos.
+▶️ ### PASO 4: Permitir conexiones remotas al dispositivo para MariaDB
 ```bash
-OPTIONS (
-    host '192.168.1.82',  #Poner la ip del host de la bdd
-    dbname 'postgres',  #Poner el nombre de tu bdd
-    port '5432' #Poner el puerto que tienes corriendo la bdd
-  );
+sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+bind-address = 0.0.0.0
+sudo systemctl restart mariadb
 ```
-```bash
-OPTIONS (
-    user 'ext_user', #Colocas tu usuario que hayas creado anteriormente con la consulta SQL
-    password 'postgres' #Colocas la contraseña que hayas creado anteriormente para el usuario creado en la consulta SQL
-  );
-```
-✅ Ya te puedes conectar, ahora puedes utilizar las vistas y selecciones del archivo.
 
+▶️ ### PASO 5: Descargar Antares SQL
+```bash
+https://antares-sql.app/downloads
+```
+Nota: Elegir ARMv8	AppImage	stable
+
+PASO 6: Ejecutar el .AppImage. Ir a la ubicación de la descarga (en nuestro caso en "Descargas") y ejecutar:
+```bash
+chmod +x Antares-SQL-1.27.0-arm64.AppImage
+./Antares-SQL-1.27.0-arm64.AppImage
+```
+Nota: Ustedes usan el nombre del archivo que tengan, para nuestro caso fue este. El nombre y versión pueden cambiar con el tiempo.
+
+▶️ ### PASO 7:  Para ejecutar y abrir Antares de ahora en adelante se usará el siguiente comando en la ruta que esté ubicada el archivo 
+```bash
+./Antares-SQL-1.27.0-arm64.AppImage
+```
+
+▶️ ### PASO 7: Crear un usuario para conectarse al puerto y base de datos para administrarla
+```bash
+sudo mysql
+CREATE USER 'fdw_user'@'%' IDENTIFIED BY 'tu_contraseña_segura';
+GRANT ALL PRIVILEGES ON ventas.* TO 'fdw_user'@'%';
+FLUSH PRIVILEGES;
+```
+
+▶️ ### PASO 8: Entrar a Antares y realizar la conexión a la base de datos indicando como se llamará el servidor, el host (local), motor de la base de datos, puerto y credenciales de acceso creada anteriormente
+
+▶️ ### PASO 9: Crear la base de datos y tablas
+```bash
+CREATE DATABASE IF NOT EXISTS ventas;
+
+USE ventas;
+
+CREATE TABLE cliente (
+  -- Reemplaza SERIAL PRIMARY KEY con INT AUTO_INCREMENT PRIMARY KEY
+  cli_id INT AUTO_INCREMENT PRIMARY KEY,
+  cli_nombre VARCHAR(100) NOT NULL,
+  cli_saldo NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (cli_saldo >= 0),
+  cli_limitecredito NUMERIC(12,2) NOT NULL CHECK (cli_limitecredito BETWEEN 0 AND 3000000),
+  cli_descuento NUMERIC(5,2) NOT NULL DEFAULT 0 CHECK (cli_descuento BETWEEN 0 AND 100)
+);
+
+CREATE TABLE direcciones (
+  dir_id INT NOT NULL,
+  dir_idcliente INT NOT NULL,
+  dir_calle VARCHAR(100) NOT NULL,
+  dir_ciudad VARCHAR(50) NOT NULL,
+  dir_region VARCHAR(50) NOT NULL,
+  dir_pais VARCHAR(50) NOT NULL,
+  PRIMARY KEY (dir_id, dir_idcliente),
+  FOREIGN KEY (dir_idcliente) REFERENCES cliente(cli_id)
+);
+
+CREATE TABLE pedido (
+  ped_id INT AUTO_INCREMENT PRIMARY KEY,
+  ped_idcliente INT NOT NULL,
+  ped_direccion INT NOT NULL,
+  ped_fechapedido DATE NOT NULL DEFAULT CURRENT_DATE(), 
+  ped_estado VARCHAR(20) NOT NULL DEFAULT 'PENDIENTE',
+  FOREIGN KEY (ped_idcliente) REFERENCES cliente(cli_id),
+  FOREIGN KEY (ped_direccion, ped_idcliente) REFERENCES direcciones (dir_id, dir_idcliente)
+);
+
+CREATE TABLE detalle_pedido (
+  detped_id INT AUTO_INCREMENT PRIMARY KEY,
+  detped_idpedido INT NOT NULL,
+  detped_idarticulo INT NOT NULL,
+  detped_cantidad INT NOT NULL CHECK (detped_cantidad > 0),
+  detped_precio NUMERIC(12,2) NOT NULL CHECK (detped_precio > 0),
+  detped_descuento NUMERIC(5,2) NOT NULL DEFAULT 0 CHECK (detped_descuento BETWEEN 0 AND 100),
+  FOREIGN KEY (detped_idpedido) REFERENCES pedido(ped_id)
+);
+```
+
+▶️ ### PASO 10: Insertar datos de prueba (ficticios) a la base de datos
+```bash
+INSERT INTO cliente (cli_nombre, cli_limitecredito) VALUES
+('Cliente A', 2000000),
+('Cliente B', 1500000);
+
+INSERT INTO direcciones (dir_id, dir_idcliente, dir_calle, dir_ciudad, dir_region, dir_pais) VALUES
+(1, 1, 'Av. Los Andes 123', 'Puerto Montt', 'Sur', 'Chile'),
+(2, 1, 'Calle del Mar 45', 'Valdivia', 'Sur', 'Chile'),
+(1, 2, 'Av. Japón 900', 'Santiago', 'Centro', 'Chile');
+
+INSERT INTO pedido (ped_idcliente, ped_direccion) VALUES
+(1, 1), -- Cliente 1, Dirección ID 1 (Chile, Puerto Montt)
+(2, 1); -- Cliente 2, Dirección ID 1 (Chile, Santiago)
+
+INSERT INTO detalle_pedido (detped_idpedido, detped_idarticulo, detped_cantidad, detped_precio)
+VALUES
+(1, 101, 10, 3500), -- Pedido 1, Artículo 101
+(2, 102, 5, 2000);  -- Pedido 2, Artículo 102
+```
+✅ Ahora la base de datos funciona de forma local y permite recibir conexiones al puerto especificado, pudiendo conectar la otra parte de la base de datos fragmentada en otro dispositivo host para unificarlas.
 
 
 # WINDOWS
-Descargar e instalar POSTGRESQL 17, es importante que sea 17 porque un software que se usará posteriormente no tiene funcionamiento para POSTGRESQL 18.
+▶️ ### PASO 1: Descargar e instalar POSTGRESQL 17, es importante que sea 17 porque un software que se usará posteriormente no tiene funcionamiento para POSTGRESQL 18.
 ```bash
 https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
 ```
-Descargar e instalar MariaDB Connector/ODBC 64-bit x86.
+▶️ ### PASO 2: Descargar e instalar MariaDB Connector/ODBC 64-bit x86.
 ```bash
 https://mariadb.com/downloads/#connectors
 ```
@@ -113,17 +152,17 @@ Product: ODBC Connector
 Version: Reomendad o actual
 OS: MS Windows (64-bit x86)
 ```
-Abrir ODBC Data Source / Administrador de origen de datos ODBC. IMPORTANTE: Debe ser el 64-bit x86, no el 32-bit. Si no lo encuentras con el buscador de Windows, es posible que se encuentre en:
+▶️ ### PASO 3: Abrir ODBC Data Source / Administrador de origen de datos ODBC. IMPORTANTE: Debe ser el 64-bit x86, no el 32-bit. Si no lo encuentras con el buscador de Windows, es posible que se encuentre en:
 ```bash
 C:\Windows\System32\odbcad32.exe
 ```
 
-Configurar conexión con ODBC Data Source / Administrador de origen de datos ODBC. 
+▶️ ### PASO 4: Configurar conexión con ODBC Data Source / Administrador de origen de datos ODBC. 
 ```bash
 DSN de sistema > agregar > Elegir la opción de "MariaDB ODBC 3.2 Driver"
 ```
 
-Completar campos para conectarse a la base de datos MariaDB, los campos y datos serán:
+▶️ ### PASO 5: Completar campos para conectarse a la base de datos MariaDB, los campos y datos serán:
 ```bash
 Name: MariaDB_RPi
 Description: Conexión a MariaDB en Raspberry Pi
@@ -136,17 +175,17 @@ Database: ventas (o el que corresponda según nombre DB en Raspberry Pi)
 NOTA: El resto dejarlo por defecto y > next > next > next > next > finish
 ```
 
-Descargar PostgreSQL 17 64-bit for Windows FDWs
+▶️ ### PASO 6: Descargar PostgreSQL 17 64-bit for Windows FDWs
 ```bash
 https://www.postgresonline.com/journal/index.php?/archives/416-PostgreSQL-17-64-bit-for-Windows-FDWs.html
 ```
 
-Descomprimir el archivo. Luego, entrar a carpeta descomprimida y:
+▶️ ### PASO 7: Descomprimir el archivo. Luego, entrar a carpeta descomprimida y:
 1) Buscar el archivo odbc_fdw.dll y pegarlo en C:\Program Files\PostgreSQL\17\lib
 2) Buscar odbc_fdw.control y pegarlo en C:\Program Files\PostgreSQL\17\share\extension
 3) Buscar odbc_fdw--0.5.2 y pegarlo en C:\Program Files\PostgreSQL\17\share\extension
 
-Entrar al gestor de base de datos pgAdmin4 para crear la base de datos y sus tablas.
+▶️ ### PASO 8: Entrar al gestor de base de datos pgAdmin4 para crear la base de datos y sus tablas.
 ```bash
 CREATE DATABASE abastecimiento;
 
@@ -173,7 +212,7 @@ CREATE TABLE articulo_fabrica (
     PRIMARY KEY (artfab_idarticulo, artfab_idfabrica)
 );
 ```
-Insertar datos de prueba (ficticios) en base de datos actual.
+▶️ ### PASO 9: Insertar datos de prueba (ficticios) en base de datos actual.
 ```bash
 DO $$
 DECLARE
@@ -259,7 +298,7 @@ BEGIN
 END $$;
 ```
 
-Conectarse a la base de datos remota usando las credenciales guardadas en el DSN para unificar las segmentaciones y realizar consultas normales.
+▶️ ### PASO 10: Conectarse a la base de datos remota usando las credenciales guardadas en el DSN para unificar las segmentaciones y realizar consultas normales.
 ```bash
 CREATE EXTENSION IF NOT EXISTS odbc_fdw;
 
@@ -351,7 +390,7 @@ JOIN
     detalle_pedido_remoto dpr 
     ON a.art_id = dpr.detped_idarticulo
 ```
-
+✅ Ya están conectadas ambas bases de datos, desde este dispositivo actual (Windows) se pueden enviar querys como si las tablas de la base de datos de la Raspberry Pi estuviera localmente en esta máquina. Unificación completa de la base de dato distribuida. El usuario no sabrá como está fragmentada ni su ubicación o la cantidad de dispositivos, solo usará el servicio.
 
 
 
