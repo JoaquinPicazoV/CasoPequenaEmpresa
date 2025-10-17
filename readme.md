@@ -10,7 +10,7 @@ Este proyecto consiste modelo de datos para una pequeña empresa que gestiona pr
 - Tener dos dispositivos para hostear las bases de datos.
 
 # RASPBERRY PI
-▶️ ### PASO 1: Actualizar e instalar la raspberri
+###  ▶️ PASO 1: Actualizar e instalar la raspberri
 ```bash
 sudo apt update
 sudo apt upgrade -y
@@ -19,13 +19,13 @@ sudo apt upgrade -y
 sudo apt upgrade -y
 ```
 
-▶️ ### PASO 2: Instalar lo necesario para usar MariaDB
+###  ▶️ PASO 2: Instalar lo necesario para usar MariaDB
 ```bash
 sudo apt install mariadb-server
 sudo apt install mariadb-client
 ```
 
-▶️ ### PASO 3: Permitir conexiones al puerto donde correrá el servidor con MariaDB y la DB trabajando con el firewall
+###  ▶️  PASO 3: Permitir conexiones al puerto donde correrá el servidor con MariaDB y la DB trabajando con el firewall
 ```bash
 sudo ufw allow 3306/tcp
 sudo ufw enable
@@ -33,32 +33,32 @@ sudo ufw status
 ```
 Opción 2: realizarlo con iptables (pero recomendamos usar ufw)
 
-▶️ ### PASO 4: Permitir conexiones remotas al dispositivo para MariaDB
+###  ▶️  PASO 4: Permitir conexiones remotas al dispositivo para MariaDB
 ```bash
 sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
 bind-address = 0.0.0.0
 sudo systemctl restart mariadb
 ```
 
-▶️ ### PASO 5: Descargar Antares SQL
+### ▶️  PASO 5: Descargar Antares SQL
 ```bash
 https://antares-sql.app/downloads
 ```
 Nota: Elegir ARMv8	AppImage	stable
 
-PASO 6: Ejecutar el .AppImage. Ir a la ubicación de la descarga (en nuestro caso en "Descargas") y ejecutar:
+### ▶️ PASO 6: Ejecutar el .AppImage. Ir a la ubicación de la descarga (en nuestro caso en "Descargas") y ejecutar:
 ```bash
 chmod +x Antares-SQL-1.27.0-arm64.AppImage
 ./Antares-SQL-1.27.0-arm64.AppImage
 ```
 Nota: Ustedes usan el nombre del archivo que tengan, para nuestro caso fue este. El nombre y versión pueden cambiar con el tiempo.
 
-▶️ ### PASO 7:  Para ejecutar y abrir Antares de ahora en adelante se usará el siguiente comando en la ruta que esté ubicada el archivo 
+### ▶️  PASO 7:  Para ejecutar y abrir Antares de ahora en adelante se usará el siguiente comando en la ruta que esté ubicada el archivo 
 ```bash
 ./Antares-SQL-1.27.0-arm64.AppImage
 ```
 
-▶️ ### PASO 7: Crear un usuario para conectarse al puerto y base de datos para administrarla
+### ▶️  PASO 7: Crear un usuario para conectarse al puerto y base de datos para administrarla
 ```bash
 sudo mysql
 CREATE USER 'fdw_user'@'%' IDENTIFIED BY 'tu_contraseña_segura';
@@ -66,9 +66,9 @@ GRANT ALL PRIVILEGES ON ventas.* TO 'fdw_user'@'%';
 FLUSH PRIVILEGES;
 ```
 
-▶️ ### PASO 8: Entrar a Antares y realizar la conexión a la base de datos indicando como se llamará el servidor, el host (local), motor de la base de datos, puerto y credenciales de acceso creada anteriormente
+### ▶️ PASO 8: Entrar a Antares y realizar la conexión a la base de datos indicando como se llamará el servidor, el host (local), motor de la base de datos, puerto y credenciales de acceso creada anteriormente
 
-▶️ ### PASO 9: Crear la base de datos y tablas
+### ▶️ PASO 9: Crear la base de datos y tablas
 ```bash
 CREATE DATABASE IF NOT EXISTS ventas;
 
@@ -115,7 +115,7 @@ CREATE TABLE detalle_pedido (
 );
 ```
 
-▶️ ### PASO 10: Insertar datos de prueba (ficticios) a la base de datos
+### ▶️  PASO 10: Insertar datos de prueba (ficticios) a la base de datos
 ```bash
 INSERT INTO cliente (cli_nombre, cli_limitecredito) VALUES
 ('Cliente A', 2000000),
@@ -139,11 +139,11 @@ VALUES
 
 
 # WINDOWS
-▶️ ### PASO 1: Descargar e instalar POSTGRESQL 17, es importante que sea 17 porque un software que se usará posteriormente no tiene funcionamiento para POSTGRESQL 18.
+### ▶️  PASO 1: Descargar e instalar POSTGRESQL 17, es importante que sea 17 porque un software que se usará posteriormente no tiene funcionamiento para POSTGRESQL 18.
 ```bash
 https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
 ```
-▶️ ### PASO 2: Descargar e instalar MariaDB Connector/ODBC 64-bit x86.
+### ▶️  PASO 2: Descargar e instalar MariaDB Connector/ODBC 64-bit x86.
 ```bash
 https://mariadb.com/downloads/#connectors
 ```
@@ -152,17 +152,17 @@ Product: ODBC Connector
 Version: Reomendad o actual
 OS: MS Windows (64-bit x86)
 ```
-▶️ ### PASO 3: Abrir ODBC Data Source / Administrador de origen de datos ODBC. IMPORTANTE: Debe ser el 64-bit x86, no el 32-bit. Si no lo encuentras con el buscador de Windows, es posible que se encuentre en:
+### ▶️  PASO 3: Abrir ODBC Data Source / Administrador de origen de datos ODBC. IMPORTANTE: Debe ser el 64-bit x86, no el 32-bit. Si no lo encuentras con el buscador de Windows, es posible que se encuentre en:
 ```bash
 C:\Windows\System32\odbcad32.exe
 ```
 
-▶️ ### PASO 4: Configurar conexión con ODBC Data Source / Administrador de origen de datos ODBC. 
+### ▶️  PASO 4: Configurar conexión con ODBC Data Source / Administrador de origen de datos ODBC. 
 ```bash
 DSN de sistema > agregar > Elegir la opción de "MariaDB ODBC 3.2 Driver"
 ```
 
-▶️ ### PASO 5: Completar campos para conectarse a la base de datos MariaDB, los campos y datos serán:
+### ▶️  PASO 5: Completar campos para conectarse a la base de datos MariaDB, los campos y datos serán:
 ```bash
 Name: MariaDB_RPi
 Description: Conexión a MariaDB en Raspberry Pi
@@ -175,17 +175,17 @@ Database: ventas (o el que corresponda según nombre DB en Raspberry Pi)
 NOTA: El resto dejarlo por defecto y > next > next > next > next > finish
 ```
 
-▶️ ### PASO 6: Descargar PostgreSQL 17 64-bit for Windows FDWs
+### ▶️  PASO 6: Descargar PostgreSQL 17 64-bit for Windows FDWs
 ```bash
 https://www.postgresonline.com/journal/index.php?/archives/416-PostgreSQL-17-64-bit-for-Windows-FDWs.html
 ```
 
-▶️ ### PASO 7: Descomprimir el archivo. Luego, entrar a carpeta descomprimida y:
+### ▶️  PASO 7: Descomprimir el archivo. Luego, entrar a carpeta descomprimida y:
 1) Buscar el archivo odbc_fdw.dll y pegarlo en C:\Program Files\PostgreSQL\17\lib
 2) Buscar odbc_fdw.control y pegarlo en C:\Program Files\PostgreSQL\17\share\extension
 3) Buscar odbc_fdw--0.5.2 y pegarlo en C:\Program Files\PostgreSQL\17\share\extension
 
-▶️ ### PASO 8: Entrar al gestor de base de datos pgAdmin4 para crear la base de datos y sus tablas.
+### ▶️  PASO 8: Entrar al gestor de base de datos pgAdmin4 para crear la base de datos y sus tablas.
 ```bash
 CREATE DATABASE abastecimiento;
 
@@ -212,7 +212,7 @@ CREATE TABLE articulo_fabrica (
     PRIMARY KEY (artfab_idarticulo, artfab_idfabrica)
 );
 ```
-▶️ ### PASO 9: Insertar datos de prueba (ficticios) en base de datos actual.
+### ▶️  PASO 9: Insertar datos de prueba (ficticios) en base de datos actual.
 ```bash
 DO $$
 DECLARE
@@ -298,7 +298,7 @@ BEGIN
 END $$;
 ```
 
-▶️ ### PASO 10: Conectarse a la base de datos remota usando las credenciales guardadas en el DSN para unificar las segmentaciones y realizar consultas normales.
+### ▶️  PASO 10: Conectarse a la base de datos remota usando las credenciales guardadas en el DSN para unificar las segmentaciones y realizar consultas normales.
 ```bash
 CREATE EXTENSION IF NOT EXISTS odbc_fdw;
 
