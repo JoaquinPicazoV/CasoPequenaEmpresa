@@ -6,7 +6,7 @@ Este proyecto consiste modelo de datos para una pequeña empresa que gestiona pr
 
 ## ⚙️ Guía de ejecución
 ### 📋 REQUISITOS PREVIOS
-- De preferencia tener un Windos con instalado PostgreSQL y pgAdmin4 instalado, y en una Raspberri Pi distro linux tener instalado MariaDB y Antares. De todas formas se explica el paso a paso la descarga e instalación de estos. Pero es netamente para acelerear el proceso.
+- De preferencia tener un Windos con PostgreSQL y pgAdmin4 instalado, y en una Raspberri Pi distro linux tener instalado MariaDB y Antares. De todas formas se explica el paso a paso la descarga e instalación de estos. Pero es netamente para acelerear el proceso.
 - Tener dos dispositivos para hostear las bases de datos.
 
 # RASPBERRY PI
